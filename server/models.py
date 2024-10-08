@@ -20,8 +20,16 @@ class Bakery(db.Model, SerializerMixin):
 
     baked_goods = db.relationship('BakedGood', backref='bakery')
 
-    def __repr__(self):
-        return f'<Bakery {self.name}>'
+    def __repr__(self, include_baked_good = False):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+        }
+        if include_baked_good:
+            data['baked_goods'] = [baked_good.to_dict() for baked_good in self.baked_goods]
+            return data
 
 class BakedGood(db.Model, SerializerMixin):
     __tablename__ = 'baked_goods'
